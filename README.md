@@ -6,6 +6,8 @@ Has music playing commands
 
 TTS commands can be found at https://github.com/Awedtan/TTSbot
 
+Disclaimer: I've modified my version of discord.js commando to stop the bot from constantly pinging people. If something doesn't work properly let me know
+
 # Installation
 
 ### Requirements
