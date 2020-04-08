@@ -23,7 +23,7 @@ module.exports = class SearchCommand extends Command {
 		this.queue = new Map();
 		this.opts = {
 			maxResults: 10,
-			key: "AIzaSyCqN9TrqKdXbQhWlProzTu5hTOK3NONokc",
+			key: "",
 			type: "video"
 		};
 	}
