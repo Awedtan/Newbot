@@ -1,0 +1,7 @@
+{
+	"prefix": "prefix_here",
+	"ownerid": "id_here",
+	"token": "token_here",
+	"youtube_api": "api_here",
+	"backup_api": "optional_api_here"
+}

@@ -3,113 +3,124 @@ const { MessageEmbed } = require('discord.js');
 const ytdl = require("ytdl-core");
 const search = require("youtube-search");
 
-module.exports = class ReplyCommand extends Command {
+module.exports = class PlayCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'play',
+			aliases: ['paly'],
 			group: 'music',
 			memberName: 'play',
 			description: 'Plays/enqueues a song',
-			examples: ['play a song'],
+			examples: ['play rocket man', 'play https://youtu.be/dQw4w9WgXcQ'],
 			args: [
 				{
 					key: 'text',
-					prompt: 'What song do you want to play?',
+					prompt: ':grey_question: You didn\'t say what song to play',
 					type: 'string'
 				}
-			]
+			],
 		});
-		this.queue = new Map();
 		this.opts = {
 			maxResults: 10,
-			key: "AIzaSyCPY10BHGa4YEWSlqq3K6GT_0fNsBknBmA",
+			key: "AIzaSyCqN9TrqKdXbQhWlProzTu5hTOK3NONokc",
 			type: "video"
 		};
 	}
 	async run(msg, { text }) {
-		try {
-			const voiceChannel = msg.member.voice.channel;
-			if (!voiceChannel) return msg.say("You need to be in a voice channel to use that");
+		if (text) {
+			try {
+				const voiceChannel = msg.member.voice.channel;
+				if (!voiceChannel) return msg.say('You need to be in a voice channel to use that');
 
-			const permissions = voiceChannel.permissionsFor(msg.client.user);
-			if (!permissions.has('CONNECT')) return msg.say('I don\'t have permission to join your voice channel.');
-			if (!permissions.has('SPEAK')) return msg.say('I don\'t have permission to speak in your voice channel.');
+				const permissions = voiceChannel.permissionsFor(msg.client.user);
+				if (!permissions.has('CONNECT')) return msg.say('I don\'t have permission to join your voice channel.');
+				if (!permissions.has('SPEAK')) return msg.say('I don\'t have permission to speak in your voice channel.');
 
-			const validLink = /(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?/;
-			const serverQueue = this.queue.get(msg.guild.id);
-
-			if (validLink.test(text)) {
-
-			}
-			else {
-				const query = text;
-				let results = await search(query, this.opts);
-				let searches = results.results;
-				let index = 0;
-				let titles = searches.map(result => {
-					index++;
-					return index + ") " + result.title;
-				});
-				console.log(titles);
-				let selected = searches[0];
-
-				try {
-					let embed = new MessageEmbed()
-						.setTitle(`${selected.title}`)
-						.setURL(`${selected.link}`)
-						.setThumbnail(`${selected.thumbnails.default.url}`);
-					msg.embed(embed);
-				} catch (err) {
-					console.log("No results");
-					return msg.say(`:pensive: No results were found, double check your spelling :triumph:`);
-				}
-
-				const songInfo = await ytdl.getInfo(`${selected.link}`);
-				const song = {
-					title: songInfo.title,
-					url: songInfo.video_url
-				};
-
-				if (!serverQueue || serverQueue.songs.length == 0) {
-					const queueConstruct = {
-						message: null,
-						voiceChannel,
-						connection: null,
-						songs: [],
-						volume: 5
+				const validLink = /(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?/;
+				
+				if (validLink.test(text)) {
+					const songInfo = await ytdl.getInfo(text);
+					const song = {
+						title: songInfo.title,
+						url: songInfo.video_url
 					};
-					queueConstruct.message = msg;
-					queueConstruct.songs.push(song);
-					queueConstruct.connection = await voiceChannel.join();
-
-					this.queue.set(msg.guild.id, queueConstruct);
-					this.play(msg.guild, song, this.queue)
+					
+					if (!msg.guild.musicData.isPlaying) {
+						msg.guild.musicData.message = msg;
+						msg.guild.musicData.queue.push(song);
+						msg.guild.musicData.connection = await voiceChannel.join();
+						msg.guild.musicData.voiceChannel = voiceChannel;
+						this.play(msg, song);
+					}
+					else {
+						msg.guild.musicData.queue.push(song);
+						console.log(`Queued ${song.title}`);
+						return msg.say(`:+1: \`${song.title}\` was added to the queue`);
+					}
 				}
 				else {
-					serverQueue.songs.push(song);
-					console.log(`Queued ${song.title}`);
-					return msg.say(`:+1: \`${song.title}\` was added to the queue`);
+					const query = text;
+					let results = await search(query, this.opts);
+					let searches = results.results;
+					let index = 0;
+					let titles = searches.map(result => {
+						index++;
+						return index + ') ' + result.title;
+					});
+					console.log(titles);
+					let selected = searches[0];
+
+					try {
+						let embed = new MessageEmbed()
+							.setTitle(`${selected.title}`)
+							.setURL(`${selected.link}`)
+							.setThumbnail(`${selected.thumbnails.default.url}`);
+						msg.embed(embed);
+					} catch (err) {
+						console.log("No results");
+						return msg.say(`:pensive: No results were found, double check your spelling :triumph:`);
+					}
+
+					const songInfo = await ytdl.getInfo(`${selected.link}`);
+					const song = {
+						title: songInfo.title,
+						url: songInfo.video_url
+					};
+
+					if (!msg.guild.musicData.isPlaying) {
+						msg.guild.musicData.message = msg;
+						msg.guild.musicData.queue.push(song);
+						msg.guild.musicData.connection = await voiceChannel.join();
+						msg.guild.musicData.voiceChannel = voiceChannel;
+						this.play(msg, song);
+					}
+					else {
+						msg.guild.musicData.queue.push(song);
+						console.log(`Queued ${song.title}`);
+						return msg.say(`:+1: \`${song.title}\` was added to the queue`);
+					}
 				}
+			} catch (err) {
+				msg.say(':pensive: Sorry, something went wrong');
+				console.log(err);
 			}
-		} catch (err) {
-			console.log(err);
 		}
 	}
 
-	play(guild, song, queue) {
-		if (!song) return;
+	play(msg, song) {
+		msg.guild.musicData.isPlaying = true;
+		if (!song) return msg.guild.musicData.isPlaying = false;
 
-		const serverQueue = this.queue.get(guild.id);
-		const dispatcher = serverQueue.connection
-			.play(ytdl(song.url), { highWaterMark: 1<<30})
-			.on("finish", () => {
-				serverQueue.songs.shift();
-				this.play(guild, serverQueue.songs[0], queue);
+		msg.guild.musicData.dispatcher = msg.guild.musicData.connection
+			.play(ytdl(song.url), { highWaterMark: 64 })
+			.on('finish', () => {
+				msg.guild.musicData.queue.shift();
+				this.play(msg, msg.guild.musicData.queue[0]);
 			})
-			.on("error", error => console.error(error));
+			.on('error', error => console.error(error));
+		msg.guild.musicData.dispatcher.setVolumeLogarithmic(msg.guild.musicData.volume / 5);
 
-		dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
 		console.log(`Now playing ${song.title}`);
-		serverQueue.message.say(`:arrow_forward: Now playing \`${song.title}\``);
+		msg.guild.musicData.message.say(`:arrow_forward: Now playing \`${song.title}\``);
 	}
 };
