@@ -22,7 +22,7 @@ module.exports = class PlayCommand extends Command {
 		});
 		this.opts = {
 			maxResults: 10,
-			key: "AIzaSyCqN9TrqKdXbQhWlProzTu5hTOK3NONokc",
+			key: "",
 			type: "video"
 		};
 	}
