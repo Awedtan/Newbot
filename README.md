@@ -2,7 +2,7 @@
 
 A 300% original discord.js bot, this time written using discord.js commando!
 
-Has music playing commands
+Has music playing commands and can sing!
 
 TTS commands can be found at https://github.com/Awedtan/TTSbot
 
