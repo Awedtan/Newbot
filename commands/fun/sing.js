@@ -7,19 +7,22 @@ module.exports = class SingCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'sing',
+			aliases: ['music'],
 			group: 'fun',
 			memberName: 'sing',
 			description: 'Sings a song\n\n' +
 				'Format:\n' +
-				'sing songname length(pitch,pitch,pitch) length(pitch) length(pitch,pitch)\n\n' +
+				'sing [tempo] length(pitch,pitch)repeats\n\n' +
 				'Note length applies to the notes inside the next pair of brackets\n' +
-				'No flats, only sharps',
-			examples: ['sing hotcrossbuns 4(e4,d4) 2(c4) 4(e4,d4) 2(c4) 8(c4,c4,c4,c4,d4,d4,d4,d4) 4(e4,d4) 2(c4)'],
+				'No flats, only sharps\n' +
+				'Invalid pitches will become rests',
+			examples: ['sing 120 4(e4,d4) 2(c4) 4(e4,d4) 2(c4) 8(c4,d4)4 4(e4,d4) 2(c4)'],
 			args: [
 				{
 					key: 'text',
 					prompt: ':grey_question: You didn\'t say what to sing',
-					type: 'string'
+					type: 'string',
+					default: ''
 				}
 			],
 		});
@@ -35,31 +38,53 @@ module.exports = class SingCommand extends Command {
 			if (!permissions.has('SPEAK')) return msg.say('I don\'t have permission to speak in your voice channel.');
 
 			const args = text.split(" ");
-			var track = new MidiWriter.Track();
 
-			for (var i = 1; i < args.length; i++) {
-				const values = args[i].split(/[(),]+/);
-
-				for (var j = 1; j < values.length - 1; j++) {
-					track.addEvent(new MidiWriter.NoteEvent({ pitch: [`${values[j]}`], duration: `${values[0]}`, velocity: 100 }));
+			if (args.length == 1 && args[0].indexOf('(') == -1 && args[0].indexOf(')') == -1 && args[0].indexOf(',') == -1) {
+				if (fs.existsSync(`songs/saved/${args[0]}.wav`)) {
+					const connection = await voiceChannel.join();
+					connection.play(`songs/saved/${args[0]}.wav`);
+					msg.say(`Now singing ${args[0]}`);
+					console.log(`Singing ${args[0]}`);
+				}
+				else {
+					msg.say(`No song with that name was found`);
 				}
 			}
-			var write = new MidiWriter.Writer(track);
-			write.saveMIDI(`songs/${args[0]}`);
+			else {
+				var track = new MidiWriter.Track();
+				track.setTempo(args[0]);
 
-			setTimeout(function () {
-				let midiBuffer = fs.readFileSync(`songs/${args[0]}.mid`);
-				let wavBuffer = synth.midiToWav(midiBuffer).toBuffer();
-				fs.writeFileSync(`songs/${args[0]}.wav`, wavBuffer, { encoding: 'binary' });
-			}, 2000);
+				for (var i = 1; i < args.length; i++) {
+					const values = args[i].split(/[(),]+/);
 
-			setTimeout(async function () {
-				const connection = await voiceChannel.join();
-				connection.play(`songs/${args[0]}.wav`);
-				msg.say(`Now singing ${args[0]} by ${msg.author.username}`);
-			}, 2000);
+					for (var j = 1; j < values.length - 1; j++) {
+						if (Number.isInteger(parseInt(values[values.length - 1]))) {
+							track.addEvent(new MidiWriter.NoteEvent({ pitch: [`${values[j]}`], duration: `${values[0]}`, repeat: `${parseInt(values[values.length - 1])}` }));
+						}
+						else {
+							track.addEvent(new MidiWriter.NoteEvent({ pitch: [`${values[j]}`], duration: `${values[0]}` }));
+						}
+					}
+				}
+				var write = new MidiWriter.Writer(track);
+				write.saveMIDI(`songs/song`);
+
+				setTimeout(function () {
+					let midiBuffer = fs.readFileSync(`songs/song.mid`);
+					let wavBuffer = synth.midiToWav(midiBuffer).toBuffer();
+					fs.writeFileSync(`songs/song.wav`, wavBuffer, { encoding: 'binary' });
+				}, 2000);
+
+				setTimeout(async function () {
+					msg.guild.musicData.isPlaying = true;
+					msg.guild.musicData.connection = await voiceChannel.join();
+					msg.guild.musicData.connection.play(`songs/song.wav`, { highWaterMark: 64 });
+					msg.say(`Now singing a song by ${msg.author.username}`);
+					console.log(`Singing a song by ${msg.author.username}`);
+				}, 2000);
+			}
 		} catch (err) {
-			msg.say(':pensive: Sorry, something went wrong');
+			msg.say(err);
 			console.log(err);
 		}
 	}
