@@ -32,4 +32,4 @@ Navigate to the bot folder in command prompt and paste this:
 
 ### Config
 
-You will need your own discord bot token and youtube api
+You will need your own discord bot token and youtube api token
