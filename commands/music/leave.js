@@ -4,10 +4,10 @@ module.exports = class LeaveCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'leave',
-			aliases: ['disconnect'],
+			aliases: ['disconnect', 'dc'],
 			group: 'music',
 			memberName: 'leave',
-			description: 'Leaves the voice channel',
+			description: 'Leaves the current voice channel',
 			examples: ['leave']
 		});
 	}

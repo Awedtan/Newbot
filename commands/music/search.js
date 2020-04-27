@@ -1,4 +1,5 @@
 const { Command } = require('discord.js-commando');
+const config = require('./../../config.json');
 const { MessageEmbed } = require('discord.js');
 const ytdl = require("ytdl-core");
 const search = require("youtube-search");
@@ -20,10 +21,9 @@ module.exports = class SearchCommand extends Command {
 				}
 			]
 		});
-		this.queue = new Map();
 		this.opts = {
 			maxResults: 10,
-			key: "",
+			key: config.youtube_api,
 			type: "video"
 		};
 	}
@@ -73,6 +73,7 @@ module.exports = class SearchCommand extends Command {
 					let embed = new MessageEmbed()
 						.setTitle('Select which song you\'d like by typing its number (0 to cancel)')
 						.setDescription(titles.join('\n'))
+						.setColor(0x00AE86);
 					msg.embed(embed);
 
 					let filter = m => (m.author.id === msg.author.id) && (m.content >= 0) && (m.content <= searches.length);
@@ -88,7 +89,8 @@ module.exports = class SearchCommand extends Command {
 					embed = new MessageEmbed()
 						.setTitle(`${selected.title}`)
 						.setURL(`${selected.link}`)
-						.setThumbnail(`${selected.thumbnails.default.url}`);
+						.setThumbnail(`${selected.thumbnails.default.url}`)
+						.setColor(0x00AE86);
 					msg.embed(embed);
 
 					const songInfo = await ytdl.getInfo(`${selected.link}`);

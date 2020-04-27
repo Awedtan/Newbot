@@ -1,4 +1,5 @@
 const { Command } = require('discord.js-commando');
+const config = require('./../../config.json');
 const { MessageEmbed } = require('discord.js');
 const ytdl = require("ytdl-core");
 const search = require("youtube-search");
@@ -18,11 +19,11 @@ module.exports = class PlayCommand extends Command {
 					prompt: ':grey_question: You didn\'t say what song to play',
 					type: 'string'
 				}
-			],
+			]
 		});
 		this.opts = {
 			maxResults: 10,
-			key: "",
+			key: config.youtube_api,
 			type: "video"
 		};
 	}
@@ -74,7 +75,8 @@ module.exports = class PlayCommand extends Command {
 						let embed = new MessageEmbed()
 							.setTitle(`${selected.title}`)
 							.setURL(`${selected.link}`)
-							.setThumbnail(`${selected.thumbnails.default.url}`);
+							.setThumbnail(`${selected.thumbnails.default.url}`)
+							.setColor(0x00AE86);
 						msg.embed(embed);
 					} catch (err) {
 						console.log("No results");

@@ -1,6 +1,7 @@
 const { prefix, token, ownerid } = require("./config.json");
 const { CommandoClient } = require('discord.js-commando');
 const { Structures, Collection } = require('discord.js');
+const Enmap = require("enmap");
 const path = require('path');
 const fs = require("fs");
 
@@ -15,7 +16,7 @@ Structures.extend('Guild', Guild => {
 				message: null,
 				voiceChannel: null,
 				queue: [],
-				volume: 5
+				volume: 2
 			};
 
 			this.commands = new Collection();
@@ -36,7 +37,7 @@ Structures.extend('Guild', Guild => {
 				const command = require(`./commands/misc/${file}`);
 				this.commands.set(command.name, command);
 			}
-			
+
 			console.log(this.client.registry.findCommands(''.command, false, ''));
 		}
 	}
@@ -48,6 +49,8 @@ const client = new CommandoClient({
 	owner: ownerid,
 	disableEveryone: true,
 });
+
+client.points = new Enmap({ name: "points" });
 
 client.registry
 	.registerDefaultTypes()
@@ -63,7 +66,7 @@ client.registry
 
 client.once("ready", () => {
 	console.log("Ready!");
-	client.user.setActivity('Under Construction');
+	client.user.setActivity('donate to my patreon');
 });
 
 client.once("reconnecting", () => {
@@ -75,6 +78,13 @@ client.once("disconnect", () => {
 });
 
 client.on("message", async msg => {
+	if (msg.author.bot) return;
+
+	client.points.ensure(msg.author.id, {
+		id: msg.author.id,
+		name: msg.author.username,
+		points: 0,
+	});
 });
 
 client.login(token);

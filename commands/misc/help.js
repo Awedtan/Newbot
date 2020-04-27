@@ -25,23 +25,26 @@ module.exports = class HelpCommand extends Command {
 		try {
 			if (!text) {
 				const embed = new MessageEmbed()
-					.setTitle(`Help Menu`)
+					.setTitle(`Help`)
 					.setDescription(
 						`Current prefix: \`${prefix}\`\n\n` +
 						`Music\n` +
 						`\`play\`, \`search\`, \`skip\`, \`remove\`, \`queue\`, \`stop\`, \`leave\`, \`pause\`, \`resume\`\n\n` +
+						`Fun\n` +
+						`\`coins\`, \`leaderboard\`, \`uwuify\`\n\n` +
 						`Use \`help [command]\` for more information about a command`
 					)
+					.setColor(0x00AE86);
 				msg.embed(embed);
 			}
 			else {
 				const commands = this.client.registry.findCommands(text, false, '');
-				
+
 				var examples = commands[0].examples[0];
-					for (let i = 1; i < commands[0].examples.length; i++) {
-						examples += '\n' + commands[0].examples[i];
-					}
-				
+				for (let i = 1; i < commands[0].examples.length; i++) {
+					examples += '\n' + commands[0].examples[i];
+				}
+
 				if (commands[0].aliases.length > 0) {
 					var aliases = commands[0].aliases[0];
 					for (let i = 1; i < commands[0].aliases.length; i++) {
@@ -49,26 +52,29 @@ module.exports = class HelpCommand extends Command {
 					}
 
 					const embed = new MessageEmbed()
-						.setTitle('Help Menu')
+						.setTitle('Help')
 						.setDescription(commands[0].name)
 						.addFields(
 							{ name: 'Description', value: commands[0].description, inline: false },
 							{ name: 'Examples', value: examples, inline: false },
 							{ name: 'Aliases', value: aliases, inline: false },
-						);
+						)
+						.setColor(0x00AE86);
 					msg.embed(embed);
 				}
 				else {
 					const embed = new MessageEmbed()
-						.setTitle('Help Menu')
+						.setTitle('Help')
 						.setDescription(commands[0].name)
 						.addFields(
 							{ name: 'Description', value: commands[0].description, inline: false },
 							{ name: 'Examples', value: examples, inline: false },
-						);
+						)
+						.setColor(0x00AE86);
 					msg.embed(embed);
 				}
 			}
+			console.log(`Displayed help menu`);
 		} catch (err) {
 			msg.say(':pensive: Sorry, something went wrong');
 			console.log(err);
