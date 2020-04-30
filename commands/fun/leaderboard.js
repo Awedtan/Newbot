@@ -21,14 +21,14 @@ module.exports = class LeaderboardCommand extends Command {
 
 			const embed = new MessageEmbed()
 				.setTitle("Leaderboard")
-				.setDescription("Top 10 richest users")
+				.setDescription("The top 10 richest users")
 				.setColor(0x00AE86);
 			for (const data of top10) {
 				embed.addField(data.name, `${data.points} DanCoin`);
 			}
 			msg.embed(embed);
 		} catch (err) {
-			msg.say(':pensive: Sorry, something went wrong');
+			msg.say('😔 Sorry, something went wrong');
 			console.log(err);
 		}
 	}

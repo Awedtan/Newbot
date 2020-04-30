@@ -16,7 +16,7 @@ module.exports = class CoinsCommand extends Command {
 		try {
 			msg.say(`You currently have ${this.client.points.get(msg.author.id, "points")} DanCoin`);
 		} catch (err) {
-			msg.say(':pensive: Sorry, something went wrong');
+			msg.say('😔 Sorry, something went wrong');
 			console.log(err);
 		}
 	}

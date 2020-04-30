@@ -13,7 +13,7 @@ module.exports = class UWUCommand extends Command {
 			args: [
 				{
 					key: 'text',
-					prompt: ':grey_question: You didn\'t give any text to uwuify',
+					prompt: '❔ You didn\'t give any text to uwuify',
 					type: 'string'
 				}
 			]
@@ -24,7 +24,7 @@ module.exports = class UWUCommand extends Command {
 		try {
 			msg.say(owoify(text, 'uvu'));
 		} catch (err) {
-			msg.say(':pensive: Sorry, something went wrong');
+			msg.say('😔 Sorry, something went wrong');
 			console.log(err);
 		}
 	}

@@ -17,19 +17,19 @@ module.exports = class ResumeCommand extends Command {
 				if (msg.guild.musicData.dispatcher.paused) {
 					msg.guild.musicData.dispatcher.resume();
 					msg.say('Resumed music playback');
-					console.log(':arrow_forward: Resumed music playback');
+					console.log('▶️ Resumed music playback');
 				}
 				else {
-					msg.say(':x: I\'m not paused');
+					msg.say('❌ I\'m not paused');
 					console.log('Resume failed (not paused)');
 				}
 			}
 			else {
-				msg.say(':x: I\'m not playing anything');
+				msg.say('❌ I\'m not playing anything');
 				console.log('Resume failed (empty queue)');
 			}
 		} catch (err) {
-			msg.say(':pensive: Sorry, something went wrong');
+			msg.say('😔 Sorry, something went wrong');
 			console.log(err);
 		}
 	}

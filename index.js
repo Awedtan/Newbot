@@ -83,7 +83,7 @@ client.on("message", async msg => {
 	client.points.ensure(msg.author.id, {
 		id: msg.author.id,
 		name: msg.author.username,
-		points: 0,
+		points: 10,
 	});
 });
 

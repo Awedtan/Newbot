@@ -24,11 +24,11 @@ module.exports = class QueueCommand extends Command {
 				console.log(`Displayed ${msg.guild.musicData.queue.length} songs currently playing or in queue`);
 			}
 			else {
-				msg.say(':x: There\'s nothing in the queue right now');
+				msg.say('❌ There\'s nothing in the queue right now');
 				console.log('Queue failed (empty queue)');
 			}
 		} catch (err) {
-			msg.say(':pensive: Sorry, something went wrong');
+			msg.say('😔 Sorry, something went wrong');
 			console.log(err);
 		}
 	}

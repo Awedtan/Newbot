@@ -31,7 +31,7 @@ module.exports = class HelpCommand extends Command {
 						`Music\n` +
 						`\`play\`, \`search\`, \`skip\`, \`remove\`, \`queue\`, \`stop\`, \`leave\`, \`pause\`, \`resume\`\n\n` +
 						`Fun\n` +
-						`\`coins\`, \`leaderboard\`, \`uwuify\`\n\n` +
+						`\`game\`, \`coins\`, \`leaderboard\`, \`uwuify\`\n\n` +
 						`Use \`help [command]\` for more information about a command`
 					)
 					.setColor(0x00AE86);
@@ -76,7 +76,7 @@ module.exports = class HelpCommand extends Command {
 			}
 			console.log(`Displayed help menu`);
 		} catch (err) {
-			msg.say(':pensive: Sorry, something went wrong');
+			msg.say('😔 Sorry, something went wrong');
 			console.log(err);
 		}
 	}

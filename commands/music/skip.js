@@ -20,11 +20,11 @@ module.exports = class SkipCommand extends Command {
 				msg.guild.musicData.dispatcher.end();
 			}
 			else{
-				msg.say(':x: There\'s nothing to skip');
+				msg.say('❌ There\'s nothing to skip');
 				console.log('Skip failed (empty queue');
 			}
 		} catch (err) {
-			msg.say(':pensive: Sorry, something went wrong');
+			msg.say('😔 Sorry, something went wrong');
 			console.log(err);
 		}
 	}

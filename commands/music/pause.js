@@ -17,19 +17,19 @@ module.exports = class PauseCommand extends Command {
 				if (!msg.guild.musicData.dispatcher.paused) {
 					msg.guild.musicData.dispatcher.pause(true);
 					msg.say('Paused music playback');
-					console.log(':pause_button: Paused music playback');
+					console.log('⏸️ Paused music playback');
 				}
 				else {
-					msg.say(':x: I\'m already paused');
+					msg.say('❌ I\'m already paused');
 					console.log('Pause failed (already paused)');
 				}
 			}
 			else {
-				msg.say(':x: I\'m not playing anything');
+				msg.say('❌ I\'m not playing anything');
 				console.log('Pause failed (empty queue)');
 			}
 		} catch (err) {
-			msg.say(':pensive: Sorry, something went wrong');
+			msg.say('😔 Sorry, something went wrong');
 			console.log(err);
 		}
 	}

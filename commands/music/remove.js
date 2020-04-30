@@ -11,7 +11,7 @@ module.exports = class RemoveCommand extends Command {
 			args: [
 				{
 					key: 'num',
-					prompt: ':grey_question: You didn\'t say what song to remove',
+					prompt: '❔ You didn\'t say what song to remove',
 					type: 'integer'
 				}
 			]
@@ -21,15 +21,15 @@ module.exports = class RemoveCommand extends Command {
 	async run(msg, { num }) {
 		try {
 			if (num < msg.guild.musicData.queue.length && num > 0) {
-				msg.say(`:eject: Removed ${msg.guild.musicData.queue[num].title}`);
+				msg.say(`⏏️ Removed ${msg.guild.musicData.queue[num].title}`);
 				console.log(`Removed ${msg.guild.musicData.queue[num].title}`);
 				msg.guild.musicData.queue.splice(num, 1);
 			}
 			else {
-				msg.say(':x: Invalid queue position');
+				msg.say('❌ Invalid queue position');
 			}
 		} catch (err) {
-			msg.say(':pensive: Sorry, something went wrong');
+			msg.say('😔 Sorry, something went wrong');
 			console.log(err);
 		}
 	}

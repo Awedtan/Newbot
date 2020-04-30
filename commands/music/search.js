@@ -16,7 +16,7 @@ module.exports = class SearchCommand extends Command {
 			args: [
 				{
 					key: 'text',
-					prompt: ':grey_question: You didn\'t say what song to search',
+					prompt: '❔ You didn\'t say what song to search',
 					type: 'string'
 				}
 			]
@@ -113,7 +113,7 @@ module.exports = class SearchCommand extends Command {
 					}
 				}
 			} catch (err) {
-				msg.say(':pensive: Sorry, something went wrong');
+				msg.say('😔 Sorry, something went wrong');
 				console.log(err);
 			}
 		}

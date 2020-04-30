@@ -16,7 +16,7 @@ module.exports = class PlayCommand extends Command {
 			args: [
 				{
 					key: 'text',
-					prompt: ':grey_question: You didn\'t say what song to play',
+					prompt: '❔ You didn\'t say what song to play',
 					type: 'string'
 				}
 			]
@@ -80,7 +80,7 @@ module.exports = class PlayCommand extends Command {
 						msg.embed(embed);
 					} catch (err) {
 						console.log("No results");
-						return msg.say(`:pensive: No results were found, double check your spelling :triumph:`);
+						return msg.say(`😔 No results were found, double check your spelling :triumph:`);
 					}
 
 					const songInfo = await ytdl.getInfo(`${selected.link}`);
@@ -103,7 +103,7 @@ module.exports = class PlayCommand extends Command {
 					}
 				}
 			} catch (err) {
-				msg.say(':pensive: Sorry, something went wrong');
+				msg.say('😔 Sorry, something went wrong');
 				console.log(err);
 			}
 		}

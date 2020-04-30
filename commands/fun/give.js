@@ -11,7 +11,7 @@ module.exports = class GiveCommand extends Command {
 			args: [
 				{
 					key: 'points',
-					prompt: ':grey_question: You didn\'t specify an amount of DanCoin',
+					prompt: '❔ You didn\'t specify an amount of DanCoin',
 					type: 'integer'
 				}
 			]
@@ -23,14 +23,14 @@ module.exports = class GiveCommand extends Command {
 			this.client.points.ensure(msg.author.id, {
 				id: msg.author.id,
 				name: msg.author.username,
-				points: 0,
+				points: 10,
 			});
 			if (this.client.isOwner(msg.author)) {
 				this.client.points.math(msg.mentions.users.first().id, "+", points, "points");
 				msg.say(`Gave ${points} DanCoin to ${msg.mentions.users.first().username}`);
 			}
 		} catch (err) {
-			msg.say(':pensive: Sorry, something went wrong');
+			msg.say('😔 Sorry, something went wrong');
 			console.log(err);
 		}
 	}

@@ -27,11 +27,11 @@ module.exports = class LeaveCommand extends Command {
 				msg.guild.musicData.queue = [];
 			}
 			else {
-				msg.say(':x: I\'m not in a voice channel');
+				msg.say('❌ I\'m not in a voice channel');
 				console.log('Leave failed (not in channel)');
 			}
 		} catch (err) {
-			msg.say(':pensive: Sorry, something went wrong');
+			msg.say('😔 Sorry, something went wrong');
 			console.log(err);
 		}
 	}

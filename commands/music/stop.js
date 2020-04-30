@@ -17,15 +17,15 @@ module.exports = class StopCommand extends Command {
 			if (msg.guild.musicData.queue.length > 0) {
 				msg.guild.musicData.dispatcher.end();
 				msg.guild.musicData.queue = [];
-				msg.say(':stop_button: Stopped music playback');
+				msg.say('⏹️ Stopped music playback');
 				console.log('Stopped music playback');
 			}
 			else {
-				msg.say(':x: There\'s nothing in the queue right now');
+				msg.say('❌ There\'s nothing in the queue right now');
 				console.log('Stop failed (empty queue');
 			}
 		} catch (err) {
-			msg.say(':pensive: Sorry, something went wrong');
+			msg.say('😔 Sorry, something went wrong');
 			console.log(err);
 		}
 	}
