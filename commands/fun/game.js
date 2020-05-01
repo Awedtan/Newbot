@@ -14,7 +14,7 @@ module.exports = class GameCommand extends Command {
 					key: 'game',
 					prompt: '❔ You didn\'t specify a game to play',
 					type: 'string',
-					default: 'blank'
+					default: ''
 				}
 			]
 		});
@@ -23,7 +23,7 @@ module.exports = class GameCommand extends Command {
 	async run(msg, { game }) {
 		try {
 			switch (String(game)) {
-				case ('blank'):
+				default:
 					const embed = new MessageEmbed()
 						.setTitle(`Games`)
 						.setDescription(
@@ -118,6 +118,5 @@ module.exports = class GameCommand extends Command {
 				msg.say('Game has been cancelled');
 			}
 		});
-		return;
 	}
 };
