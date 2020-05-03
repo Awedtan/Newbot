@@ -50,8 +50,6 @@ const client = new CommandoClient({
 	disableEveryone: true,
 });
 
-client.points = new Enmap({ name: "points" });
-
 client.registry
 	.registerDefaultTypes()
 	.registerGroups([
@@ -76,6 +74,9 @@ client.once("reconnecting", () => {
 client.once("disconnect", () => {
 	console.log("Disconnected!");
 });
+
+client.points = new Enmap({ name: "points" });
+client.rankings = new Enmap({ name: "rankings" });
 
 client.on("message", async msg => {
 	if (msg.author.bot) return;
