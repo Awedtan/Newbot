@@ -1,5 +1,6 @@
 const { Command } = require('discord.js-commando');
 const { MessageEmbed } = require('discord.js');
+const chaulk = require('chalk');
 
 //Combat formula without luck: health - (enemyAttack - defense/2)
 //Health is the amount of health (health)
@@ -88,7 +89,7 @@ module.exports = class CardsCommand extends Command {
 			this.gameLoop(msg, playerOne, playerTwo, playerOneUnitsEmbed, playerTwoUnitsEmbed, slotsEmbed, playerOneTurn, rounds, buffs, slots, oneChance, twoChance);
 		} catch (err) {
 			msg.say('😔 Sorry, something went wrong');
-			console.log(err);
+			console.log(chaulk.bgRed(err));
 		}
 	}
 

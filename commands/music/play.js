@@ -1,14 +1,15 @@
 const { Command } = require('discord.js-commando');
-const config = require('./../../config.json');
 const { MessageEmbed } = require('discord.js');
-const ytdl = require("ytdl-core");
+const config = require('./../../config.json');
 const search = require("youtube-search");
+const ytdl = require("ytdl-core");
+const chaulk = require('chalk');
 
 module.exports = class PlayCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'play',
-			aliases: ['paly'],
+			aliases: ['paly', 'p'],
 			group: 'music',
 			memberName: 'play',
 			description: 'Plays/enqueues a song',
@@ -38,14 +39,14 @@ module.exports = class PlayCommand extends Command {
 				if (!permissions.has('SPEAK')) return msg.say('I don\'t have permission to speak in your voice channel.');
 
 				const validLink = /(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?/;
-				
+
 				if (validLink.test(text)) {
 					const songInfo = await ytdl.getInfo(text);
 					const song = {
 						title: songInfo.title,
 						url: songInfo.video_url
 					};
-					
+
 					if (!msg.guild.musicData.isPlaying) {
 						msg.guild.musicData.message = msg;
 						msg.guild.musicData.queue.push(song);
@@ -56,7 +57,7 @@ module.exports = class PlayCommand extends Command {
 					else {
 						msg.guild.musicData.queue.push(song);
 						console.log(`Queued ${song.title}`);
-						return msg.say(`:+1: \`${song.title}\` was added to the queue`);
+						msg.say(`👍 \`${song.title}\` was added to the queue`);
 					}
 				}
 				else {
@@ -68,7 +69,6 @@ module.exports = class PlayCommand extends Command {
 						index++;
 						return index + ') ' + result.title;
 					});
-					console.log(titles);
 					let selected = searches[0];
 
 					try {
@@ -77,10 +77,13 @@ module.exports = class PlayCommand extends Command {
 							.setURL(`${selected.link}`)
 							.setThumbnail(`${selected.thumbnails.default.url}`)
 							.setColor(0x00AE86);
-						msg.embed(embed);
+						try {
+							msg.guild.message.delete();
+						} catch (err) { }
+						msg.guild.message = await msg.embed(embed);
 					} catch (err) {
 						console.log("No results");
-						return msg.say(`😔 No results were found, double check your spelling :triumph:`);
+						return msg.say(`😔 No results were found, double check your spelling 😤`);
 					}
 
 					const songInfo = await ytdl.getInfo(`${selected.link}`);
@@ -99,17 +102,17 @@ module.exports = class PlayCommand extends Command {
 					else {
 						msg.guild.musicData.queue.push(song);
 						console.log(`Queued ${song.title}`);
-						return msg.say(`:+1: \`${song.title}\` was added to the queue`);
+						msg.say(`👍 \`${song.title}\` was added to the queue`);
 					}
 				}
 			} catch (err) {
 				msg.say('😔 Sorry, something went wrong');
-				console.log(err);
+				console.log(chaulk.bgRed(err));
 			}
 		}
 	}
 
-	play(msg, song) {
+	async play(msg, song) {
 		msg.guild.musicData.isPlaying = true;
 		if (!song) return msg.guild.musicData.isPlaying = false;
 
@@ -123,6 +126,9 @@ module.exports = class PlayCommand extends Command {
 		msg.guild.musicData.dispatcher.setVolumeLogarithmic(msg.guild.musicData.volume / 5);
 
 		console.log(`Now playing ${song.title}`);
-		msg.guild.musicData.message.say(`:arrow_forward: Now playing \`${song.title}\``);
+		try {
+			msg.guild.message.delete();
+		} catch (err) { }
+		msg.guild.message = await msg.guild.musicData.message.say(`:arrow_forward: Now playing \`${song.title}\``);
 	}
 };

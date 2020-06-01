@@ -1,10 +1,11 @@
 const { Command } = require('discord.js-commando');
+const chaulk = require('chalk');
 
 module.exports = class TakeCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'take',
-			group: 'fun',
+			group: 'util',
 			memberName: 'take',
 			description: 'Takes away a user\'s DanCoin',
 			examples: ['take [number] [user]', 'take 10 @user'],
@@ -14,7 +15,8 @@ module.exports = class TakeCommand extends Command {
 					prompt: '❔ You didn\'t specify an amount of DanCoin',
 					type: 'integer'
 				}
-			]
+			],
+			ownerOnly: true
 		});
 	}
 
@@ -25,13 +27,11 @@ module.exports = class TakeCommand extends Command {
 				name: msg.author.username,
 				points: 10,
 			});
-			if (this.client.isOwner(msg.author)) {
-				this.client.points.math(msg.mentions.users.first().id, "-", points, "points");
-				msg.say(`Took ${points} DanCoin from ${msg.mentions.users.first().username}`);
-			}
+			this.client.points.math(msg.mentions.users.first().id, "-", points, "points");
+			msg.say(`Took ${points} DanCoin from ${msg.mentions.users.first().username}`);
 		} catch (err) {
 			msg.say('😔 Sorry, something went wrong');
-			console.log(err);
+			console.log(chaulk.bgRed(err));
 		}
 	}
 };

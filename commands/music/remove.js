@@ -1,4 +1,5 @@
 const { Command } = require('discord.js-commando');
+const chaulk = require('chalk');
 
 module.exports = class RemoveCommand extends Command {
 	constructor(client) {
@@ -27,10 +28,11 @@ module.exports = class RemoveCommand extends Command {
 			}
 			else {
 				msg.say('❌ Invalid queue position');
+				console.log(chaulk.red('Remove failed (invalid position)'));
 			}
 		} catch (err) {
 			msg.say('😔 Sorry, something went wrong');
-			console.log(err);
+			console.log(chaulk.bgRed(err));
 		}
 	}
 };

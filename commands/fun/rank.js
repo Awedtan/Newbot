@@ -1,5 +1,6 @@
 const { Command } = require('discord.js-commando');
 const { MessageEmbed } = require('discord.js');
+const chaulk = require('chalk');
 
 
 module.exports = class RankCommand extends Command {
@@ -50,7 +51,7 @@ module.exports = class RankCommand extends Command {
 					var scoreArr = this.client.rankings.get(list).score;
 				} catch (err) {
 					msg.say('❌ That rankings list doesn\'t exist yet');
-					console.log('Rank failed');
+					console.log(chaulk.red('Rank failed (invalid list)'));
 					return;
 				}
 				for (let j = 0; j < scoreArr.length; j++) {
@@ -76,10 +77,12 @@ module.exports = class RankCommand extends Command {
 				msg.embed(embed);
 			}
 			else {
+				msg.say('❌ Please give valid inputs');
+				console.log(chaulk.red('Rank failed (invalid args)'));
 			}
 		} catch (err) {
 			msg.say('😔 Sorry, something went wrong');
-			console.log(err);
+			console.log(chaulk.bgRed(err));
 		}
 	}
 };

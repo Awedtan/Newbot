@@ -1,8 +1,9 @@
 const { Command } = require('discord.js-commando');
-const config = require('./../../config.json');
 const { MessageEmbed } = require('discord.js');
-const ytdl = require("ytdl-core");
+const config = require('./../../config.json');
 const search = require("youtube-search");
+const ytdl = require("ytdl-core");
+const chaulk = require('chalk');
 
 module.exports = class SearchCommand extends Command {
 	constructor(client) {
@@ -38,14 +39,14 @@ module.exports = class SearchCommand extends Command {
 				if (!permissions.has('SPEAK')) return msg.say('I don\'t have permission to speak in your voice channel.');
 
 				const validLink = /(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?/;
-				
+
 				if (validLink.test(text)) {
 					const songInfo = await ytdl.getInfo(text);
 					const song = {
 						title: songInfo.title,
 						url: songInfo.video_url
 					};
-					
+
 					if (!msg.guild.musicData.isPlaying) {
 						msg.guild.musicData.message = msg;
 						msg.guild.musicData.queue.push(song);
@@ -56,7 +57,7 @@ module.exports = class SearchCommand extends Command {
 					else {
 						msg.guild.musicData.queue.push(song);
 						console.log(`Queued ${song.title}`);
-						return msg.say(`:+1: \`${song.title}\` was added to the queue`);
+						msg.say(`👍 \`${song.title}\` was added to the queue`);
 					}
 				}
 				else {
@@ -68,7 +69,6 @@ module.exports = class SearchCommand extends Command {
 						index++;
 						return index + ") " + result.title;
 					});
-					console.log(titles);
 
 					let embed = new MessageEmbed()
 						.setTitle('Select which song you\'d like by typing its number (0 to cancel)')
@@ -79,10 +79,8 @@ module.exports = class SearchCommand extends Command {
 					let filter = m => (m.author.id === msg.author.id) && (m.content >= 0) && (m.content <= searches.length);
 					let collected = await msg.channel.awaitMessages(filter, { max: 1, time: 30000 });
 					if (collected.first().content == 0) {
-						console.log("Search has been cancelled");
-						return msg.channel.send(
-							":crab: Search is cancelled :crab:"
-						);
+						console.log('Search has been cancelled');
+						return msg.channel.send('🦀 Search is cancelled 🦀');
 					}
 
 					let selected = searches[collected.first().content - 1];
@@ -91,7 +89,10 @@ module.exports = class SearchCommand extends Command {
 						.setURL(`${selected.link}`)
 						.setThumbnail(`${selected.thumbnails.default.url}`)
 						.setColor(0x00AE86);
-					msg.embed(embed);
+					try {
+						msg.guild.message.delete();
+					} catch (err) { }
+					msg.guild.message = await msg.embed(embed);
 
 					const songInfo = await ytdl.getInfo(`${selected.link}`);
 					const song = {
@@ -109,31 +110,33 @@ module.exports = class SearchCommand extends Command {
 					else {
 						msg.guild.musicData.queue.push(song);
 						console.log(`Queued ${song.title}`);
-						return msg.say(`:+1: \`${song.title}\` was added to the queue`);
+						msg.say(`👍 \`${song.title}\` was added to the queue`);
 					}
 				}
 			} catch (err) {
 				msg.say('😔 Sorry, something went wrong');
-				console.log(err);
+				console.log(chaulk.bgRed(err));
 			}
 		}
 	}
 
-	play(msg, song) {
+	async play(msg, song) {
 		msg.guild.musicData.isPlaying = true;
 		if (!song) return msg.guild.musicData.isPlaying = false;
 
-		const dispatcher = msg.guild.musicData.connection
+		msg.guild.musicData.dispatcher = msg.guild.musicData.connection
 			.play(ytdl(song.url), { highWaterMark: 64 })
 			.on("finish", () => {
 				msg.guild.musicData.queue.shift();
 				this.play(msg, msg.guild.musicData.queue[0]);
 			})
 			.on("error", error => console.error(error));
-		dispatcher.setVolumeLogarithmic(msg.guild.musicData.volume / 5);
+		msg.guild.musicData.dispatcher.setVolumeLogarithmic(msg.guild.musicData.volume / 5);
 
-		msg.guild.musicData.dispatcher = dispatcher;
 		console.log(`Now playing ${song.title}`);
-		msg.guild.musicData.message.say(`:arrow_forward: Now playing \`${song.title}\``);
+		try {
+			msg.guild.message.delete();
+		} catch (err) { }
+		msg.guild.message = await msg.guild.musicData.message.say(`:arrow_forward: Now playing \`${song.title}\``);
 	}
 };

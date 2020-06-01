@@ -1,12 +1,13 @@
-const { prefix } = require("./../../config.json");
 const { Command } = require('discord.js-commando');
+const { prefix } = require("./../../config.json");
 const { MessageEmbed } = require('discord.js');
+const chaulk = require('chalk');
 
 module.exports = class HelpCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'help',
-			group: 'misc',
+			group: 'util',
 			memberName: 'help',
 			description: 'Displays the help menu',
 			examples: ['help'],
@@ -31,7 +32,7 @@ module.exports = class HelpCommand extends Command {
 						`Music\n` +
 						`\`play\`, \`search\`, \`skip\`, \`remove\`, \`queue\`, \`stop\`, \`leave\`, \`pause\`, \`resume\`\n\n` +
 						`Fun\n` +
-						`\`game\`, \`coins\`, \`leaderboard\`, \`uwuify\`\n\n` +
+						`\`game\`, \`uwu\`\n\n` +
 						`Use \`help [command]\` for more information about a command`
 					)
 					.setColor(0x00AE86);
@@ -40,9 +41,15 @@ module.exports = class HelpCommand extends Command {
 			else {
 				const commands = this.client.registry.findCommands(text, false, '');
 
-				var examples = commands[0].examples[0];
-				for (let i = 1; i < commands[0].examples.length; i++) {
-					examples += '\n' + commands[0].examples[i];
+				try {
+					var examples = commands[0].examples[0];
+					for (let i = 1; i < commands[0].examples.length; i++) {
+						examples += '\n' + commands[0].examples[i];
+					}
+				} catch (err) {
+					msg.say('❌ That\'s not a valid command name');
+					console.log(chaulk.red('Help failed (invalid command name)'));
+					return;
 				}
 
 				if (commands[0].aliases.length > 0) {
@@ -77,7 +84,7 @@ module.exports = class HelpCommand extends Command {
 			console.log(`Displayed help menu`);
 		} catch (err) {
 			msg.say('😔 Sorry, something went wrong');
-			console.log(err);
+			console.log(chaulk.bgRed(err));
 		}
 	}
 };

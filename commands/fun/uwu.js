@@ -1,5 +1,6 @@
 const { Command } = require('discord.js-commando');
 const owoify = require('owoify-js').default;
+const chaulk = require('chalk');
 
 module.exports = class UWUCommand extends Command {
 	constructor(client) {
@@ -25,7 +26,7 @@ module.exports = class UWUCommand extends Command {
 			msg.say(owoify(text, 'uvu'));
 		} catch (err) {
 			msg.say('😔 Sorry, something went wrong');
-			console.log(err);
+			console.log(chaulk.bgRed(err));
 		}
 	}
 };

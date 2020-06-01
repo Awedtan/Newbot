@@ -1,4 +1,5 @@
 const { Command } = require('discord.js-commando');
+const chaulk = require('chalk');
 
 module.exports = class SkipCommand extends Command {
 	constructor(client) {
@@ -19,13 +20,13 @@ module.exports = class SkipCommand extends Command {
 				console.log(`Skipped \`${msg.guild.musicData.queue[0].title}\``);
 				msg.guild.musicData.dispatcher.end();
 			}
-			else{
+			else {
 				msg.say('❌ There\'s nothing to skip');
-				console.log('Skip failed (empty queue');
+				console.log(chaulk.red('Skip failed (empty queue'));
 			}
 		} catch (err) {
 			msg.say('😔 Sorry, something went wrong');
-			console.log(err);
+			console.log(chaulk.bgRed(err));
 		}
 	}
 };

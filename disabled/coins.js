@@ -1,10 +1,11 @@
 const { Command } = require('discord.js-commando');
+const chaulk = require('chalk');
 
 module.exports = class CoinsCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'coins',
-			aliases: ['score', 'points'],
+			aliases: ['wallet'],
 			group: 'fun',
 			memberName: 'coins',
 			description: 'Displays your DanCoin balance',
@@ -17,7 +18,7 @@ module.exports = class CoinsCommand extends Command {
 			msg.say(`You currently have ${this.client.points.get(msg.author.id, "points")} DanCoin`);
 		} catch (err) {
 			msg.say('😔 Sorry, something went wrong');
-			console.log(err);
+			console.log(chaulk.bgRed(err));
 		}
 	}
 };

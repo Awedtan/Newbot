@@ -1,5 +1,6 @@
 const { Command } = require('discord.js-commando');
 const { MessageEmbed } = require('discord.js');
+const chaulk = require('chalk');
 
 module.exports = class QueueCommand extends Command {
 	constructor(client) {
@@ -25,11 +26,11 @@ module.exports = class QueueCommand extends Command {
 			}
 			else {
 				msg.say('❌ There\'s nothing in the queue right now');
-				console.log('Queue failed (empty queue)');
+				console.log(chaulk.red('Queue failed (empty queue)'));
 			}
 		} catch (err) {
 			msg.say('😔 Sorry, something went wrong');
-			console.log(err);
+			console.log(chaulk.bgRed(err));
 		}
 	}
 };

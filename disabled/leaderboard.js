@@ -1,11 +1,12 @@
 const { Command } = require('discord.js-commando');
 const { MessageEmbed } = require('discord.js');
+const chaulk = require('chalk');
 
 module.exports = class LeaderboardCommand extends Command {
 	constructor(client) {
 		super(client, {
 			name: 'leaderboard',
-			aliases: ['board', 'top'],
+			aliases: ['board', 'top', 'lb'],
 			group: 'fun',
 			memberName: 'leaderboard',
 			description: 'Displays the DanCoin leaderboard',
@@ -29,7 +30,7 @@ module.exports = class LeaderboardCommand extends Command {
 			msg.embed(embed);
 		} catch (err) {
 			msg.say('😔 Sorry, something went wrong');
-			console.log(err);
+			console.log(chaulk.bgRed(err));
 		}
 	}
 };

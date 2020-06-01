@@ -1,4 +1,5 @@
 const { Command } = require('discord.js-commando');
+const chaulk = require('chalk');
 
 module.exports = class LeaveCommand extends Command {
 	constructor(client) {
@@ -25,14 +26,15 @@ module.exports = class LeaveCommand extends Command {
 				msg.guild.musicData.message = null;
 				msg.guild.musicData.voiceChannel = null;
 				msg.guild.musicData.queue = [];
+				msg.guild.message.delete();
 			}
 			else {
 				msg.say('❌ I\'m not in a voice channel');
-				console.log('Leave failed (not in channel)');
+				console.log(chaulk.red('Leave failed (not in channel)'));
 			}
 		} catch (err) {
 			msg.say('😔 Sorry, something went wrong');
-			console.log(err);
+			console.log(chaulk.bgRed(err));
 		}
 	}
 };
