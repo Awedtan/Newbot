@@ -19,6 +19,7 @@ Disclaimer: I've modified my version of discord.js commando to stop the bot from
 ### Installing npm packages
 
 - better-sqlite3
+- chalk
 - discord.js
 - discord.js-commando
 - enmap
