@@ -30,7 +30,7 @@ Disclaimer: I've modified my version of discord.js commando to stop the bot from
 
 Navigate to the bot folder in command prompt and paste this:
 
-`npm install discord.js discord.js-commando enmap ffmpeg fluent-ffmpeg @discordjs/opus owoify-js ytdl-core youtube-search --save`
+`npm install chalk discord.js discord.js-commando enmap ffmpeg fluent-ffmpeg @discordjs/opus owoify-js ytdl-core youtube-search --save`
 
 ### Config
 
