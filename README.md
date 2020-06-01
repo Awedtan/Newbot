@@ -2,7 +2,7 @@
 
 A 300% original discord.js bot, this time written using discord.js commando!
 
-Has music playing commands
+Has music playing commands and other stuff
 
 TTS and sing commands can be found at https://github.com/Awedtan/TTSbot
 
@@ -18,7 +18,6 @@ Disclaimer: I've modified my version of discord.js commando to stop the bot from
 
 ### Installing npm packages
 
-- better-sqlite3
 - chalk
 - discord.js
 - discord.js-commando
@@ -32,10 +31,6 @@ Disclaimer: I've modified my version of discord.js commando to stop the bot from
 Navigate to the bot folder in command prompt and paste this:
 
 `npm install discord.js discord.js-commando enmap ffmpeg fluent-ffmpeg @discordjs/opus owoify-js ytdl-core youtube-search --save`
-
-Follow this link to install better-sqlite3:
-
-https://github.com/JoshuaWise/better-sqlite3/blob/HEAD/docs/troubleshooting.md
 
 ### Config
 
